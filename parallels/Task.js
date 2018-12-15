@@ -3,6 +3,8 @@ const EventEmitter = require('events');
 
 class Task extends EventEmitter {
     constructor(name, dataBuffer, socket) {
+        super();
+
         this.name = name;
         this.dataBuffer = dataBuffer;
         this.socket = socket;
@@ -18,7 +20,6 @@ class Task extends EventEmitter {
 
         this.state = 'wait_ack';
     }
-};
-
+}
 
 module.exports = Task;

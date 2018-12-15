@@ -2,6 +2,7 @@ const net = require('net');
 const _ = require('lodash');
 const { Spinner } = require('clui');
 
+const clients = [];
 
 const countdown = new Spinner('waiting for clients...', ['|', '/', '—', '\\']);
 countdown.update = () => {
@@ -9,11 +10,9 @@ countdown.update = () => {
 };
 
 const address = process.env.PARALLEL_ADDRESS || '0.0.0.0';
-const port = parseInt(process.env.PARALLEL_PORT) || 9000;
+const port = parseInt(process.env.PARALLEL_PORT, 10) || 9000;
 
-const clients = [];
-
-var server = net.createServer(function (socket) {
+const server = net.createServer((socket) => {
     clients.push(socket);
     countdown.update();
 
@@ -27,7 +26,8 @@ process.stdin.once('data', () => {
     countdown.stop();
 
     if (!clients.length) {
-        return process.exit(1);
+        process.exit(1);
+        return;
     }
 
     console.info('[!] Start execute');
