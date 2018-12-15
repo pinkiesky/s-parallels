@@ -24,7 +24,7 @@ module.exports = {
         return modulesArray.map(($module, sum) => {
             return {
                 module: $module,
-                chunks: chunk($module.data, $module.chunkLimit),
+                chunks: chunk($module.data, $module.chunkLimit).map(d => new Float64Array(d)),
             };
         });
     },
