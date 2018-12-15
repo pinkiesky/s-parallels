@@ -1,10 +1,6 @@
 const net = require('net');
 const _ = require('lodash');
 const { Spinner } = require('clui');
-const {
-    prepareDataRaw,
-    createExecutePlanChunked,
-} = require('../math');
 
 
 const countdown = new Spinner('waiting for clients...', ['|', '/', '—', '\\']);
@@ -47,11 +43,5 @@ server.listen(port, address, () => {
     console.info(`[i] Execute command: ${process.argv}`);
     console.info("[!] Press 'CTRL+C' for exit, press 'Enter' for start execute");
 
-    console.log(createExecutePlanChunked([{
-        name: 'm1',
-        data: prepareDataRaw(100),
-        chunkLimit: 10,
-    }]));
-
-    // countdown.start();
+    countdown.start();
 });
