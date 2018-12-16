@@ -15,4 +15,11 @@ describe('float2bytes', () => {
 
         assert.deepEqual(originalFromBytes, original);
     });
+
+    it('b2f correct data from string', () => {
+        const bytes = f2b(original).toString('binary');
+        const originalFromBytes = b2f(bytes);
+
+        assert.deepEqual(originalFromBytes, original);
+    });
 });
