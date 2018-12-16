@@ -4,7 +4,7 @@ const { b2f } = require('./float2bytes');
 class PacketFinder {
     constructor() {
         this.buffer = '';
-        this.endPattern = ',\n';
+        this.endPattern = '<<< EndOfData\n';
     }
 
     addData(data) {
@@ -26,10 +26,10 @@ class PacketFinder {
         const packet = this.buffer.substring(0, packetIndex);
         this.buffer = this.buffer.substring(packetIndex + this.endPattern.length);
 
-        const [message, data] = packet.split(',', 2);
+        const [message, ...data] = packet.split(',');
         return {
             message,
-            data: b2f(data),
+            data: b2f(data.join(',')),
         };
     }
 
