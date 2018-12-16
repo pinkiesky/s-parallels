@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "better-queue": "^3.8.10",
     "clui": "^0.3.6",
     "lodash": "^4.17.11"
   },
