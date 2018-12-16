@@ -1,7 +1,6 @@
 const net = require('net');
 const _ = require('lodash');
 const { Spinner } = require('clui');
-const Task = require('../parallels/Task');
 const createQueueWorker = require('../parallels/queueWorker');
 const getPlan = require('../parallels/defaultExecutePlan');
 const { prepareDataRaw } = require('../math');
@@ -39,25 +38,41 @@ process.stdin.once('data', () => {
         console.debug(`[*] ${index + 1}: ${socket.remoteAddress}`);
     });
 
+    countdown.start();
+
     const startMs = Date.now();
     const queue = createQueueWorker(clients);
 
-    const plan = getPlan(prepareDataRaw(10 ** 5), 5000);
-    plan.forEach(p => queue.push(p));
+    const plan = getPlan(prepareDataRaw(10 ** 5), 2500);
+    // FIXME
+    plan.forEach((chunk, id) => queue.push({ chunk, id: id + 1 }));
 
     queue.on('task_finish', (taskId, result) => {
-        console.log('TASK FINISH!', taskId, result);
-        console.log(queue.length);
+        // FIXME
+        const task = plan[taskId - 1];
+        task.result = result;
+        countdown.message(`waiting: ${queue.length}/${plan.length}           `);
     });
 
     queue.on('task_failed', (taskId, error) => {
-        console.log('TASK failed!', taskId, error);
+        console.log('[!] TASK failed!', taskId, error);
     });
 
     queue.on('empty', () => {
-        console.log('Complete!');
-        console.log(`Time total:   ${Date.now() - startMs}`);
-        console.log(`Time average: ${queue.getStats().average}`);
+        console.log('\n[+] Complete!');
+        console.log(`[+] Time total: ${Date.now() - startMs}`);
+
+        const {
+            m1, m2, m3, m4,
+        } = plan.reduce((sum, { module, result }) => {
+            // eslint-disable-next-line no-param-reassign
+            sum[module.name] = (sum[module.name] || 0) + result[0];
+            return sum;
+        }, {});
+
+        console.log(`[+] Result: ${(m1 - m2) / (m3 - m4)}`);
+
+        process.exit(0);
     });
 });
 

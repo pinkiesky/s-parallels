@@ -5,7 +5,7 @@ const STATE = require('./state');
 
 module.exports = function createQueueWorker(clients) {
     // eslint-disable-next-line prefer-arrow-callback
-    const q = new Queue(function worker(chunk, cb) {
+    const q = new Queue(function worker({ chunk }, cb) {
         const client = clients.find(c => !c.$busy && (!c.$errors || c.$errors < 2));
         client.$busy = true;
 
@@ -20,7 +20,7 @@ module.exports = function createQueueWorker(clients) {
         });
 
         task.$start();
-    }, { concurrent: clients.length });
+    }, { concurrent: clients.length, maxRetries: 10, retryDelay: 250 });
 
     return q;
 };
