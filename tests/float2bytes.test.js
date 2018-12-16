@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { f2b, b2f } = require('../parallels/float2bytes');
+const { f2b, b2f } = require('../utils/float2bytes');
 
 
 describe('float2bytes', () => {
