@@ -7,19 +7,19 @@ module.exports = function getPlan(dataRaw, chunkLimit = 10) {
 
     return createExecutePlanChunked([{
         name: 'm1',
-        dataRaw: dataRaw.slice(0, dataRawPartLength),
+        data: dataRaw.slice(0, dataRawPartLength),
         chunkLimit,
     }, {
         name: 'm2',
-        dataRaw: dataRaw.slice(0, dataRawPartLength),
+        data: dataRaw.slice(0, dataRawPartLength),
         chunkLimit,
     }, {
         name: 'm3',
-        dataRaw,
+        data: dataRaw,
         chunkLimit,
     }, {
         name: 'm4',
-        dataRaw: dataRaw.slice(0, dataRawPartLength),
+        data: dataRaw.slice(0, dataRawPartLength),
         chunkLimit,
     }]);
 };
