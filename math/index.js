@@ -1,5 +1,6 @@
 const {
     chunk,
+    flatten,
 } = require('lodash');
 
 
@@ -20,9 +21,13 @@ module.exports = {
      * @param {number} modulesArray[].chunkLimit
      */
     createExecutePlanChunked(modulesArray) {
-        return modulesArray.map($module => ({
-            module: $module,
-            chunks: chunk($module.data, $module.chunkLimit).map(d => new Float64Array(d)),
-        }));
+        const tasks = modulesArray
+            .map($module => chunk($module.data, $module.chunkLimit)
+                .map(chunkPart => ({
+                    module: $module,
+                    chunk: chunkPart,
+                })));
+
+        return flatten(tasks);
     },
 };
